@@ -5,14 +5,14 @@ echo "hello world", $1
 case "$1" in
 
     start)
-    if [ -x /home/pc/workspace/daemon/Server/kmsad ] ; then
+    if [ -x /home/pc/workspace/daemon/Server/kmd ] ; then
     echo "start..."
-    /home/pc/workspace/daemon/Server/kmsad &
+    /home/pc/workspace/daemon/Server/kmd &
     fi
     ;;
 
     stop)
-    kill -9 `cat kmc_sa.pid`
+    kill -9 `cat kmd.pid`
     ;;
 
 	restart)
