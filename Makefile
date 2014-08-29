@@ -7,4 +7,3 @@ kmd : $(OBJS)
 .PHONY: clean	
 clean:
 	-rm kmd $(OBJS) *~
-

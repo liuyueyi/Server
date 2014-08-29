@@ -1,7 +1,5 @@
 #!/bin/sh
 
-echo "hello world", $1
-
 case "$1" in
 
     start)
@@ -12,12 +10,16 @@ case "$1" in
     ;;
 
     stop)
+    echo "kill... " `cat kmd.pid`
     kill -9 `cat kmd.pid`
     ;;
 
 	restart)
-	echo "kill"
-	echo "restart"
+	kill -9 `cat kmd.pid`
+	if [ -x /home/pc/workspace/daemon/Server/kmd ] ; then
+    echo "start..."
+    /home/pc/workspace/daemon/Server/kmd &
+    fi
 	;;
 	
     *)
