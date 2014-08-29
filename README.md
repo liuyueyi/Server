@@ -47,7 +47,3 @@ init.sh
 Makefile
 --------
   makefile use to compile and generate the executable progress
-<<<<<<< HEAD
-
-=======
->>>>>>> a56c99bae3e67d93b1384b439566cadd9048d5f7
