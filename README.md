@@ -7,9 +7,8 @@ Server
 
 Install
 =======
-  under terminal:
-	  make
-  
+under terminal:
+  make
 
 
 Test Command
@@ -21,11 +20,10 @@ Test Command
     
     start client: ./client
     
-    after the input command, you will find that there is a new file(temp.d), if there is no error, the content in file temp.d should be the same as the content in file.d
-    
     kill server: ./init.sh kill
     restart server: ./init.sh restart
 
+  after the input command, you will find that there is a new file(temp.d), if there is no error, the content in file temp.d should be the same as the content in file.d
 
 Source Code Analysis
 ====================
@@ -49,4 +47,7 @@ init.sh
 Makefile
 --------
   makefile use to compile and generate the executable progress
+<<<<<<< HEAD
 
+=======
+>>>>>>> a56c99bae3e67d93b1384b439566cadd9048d5f7
