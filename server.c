@@ -12,7 +12,6 @@ void server_process(int sockfd)
 {
 	char buffer[1024];
 	int data_len = 0;
-	bool start = true;
 	FILE *f;
 	if((f = fopen(temp_pathname, "w")) == NULL)
 	{
@@ -22,25 +21,11 @@ void server_process(int sockfd)
 	
 	while((data_len = recv(sockfd, buffer, 1024, 0)) >0)
 	{
-		if(start)
-		{
-			printf("start to receive the data\n");
-			printf("receive size = %d\n", data_len);
-			start = false;
-		}	
-		
-		if(data_len < 0)
-		{
-			fprintf(stderr, "receive error!\n");
-			return;
-		}
 		if(data_len < 1024)
 			buffer[data_len] = '\0';
 		fprintf(f, "%s", buffer);
-		printf("%s\n-----------------------\n", buffer);
 	}
 	fclose(f);
-	printf("--------------------------------------\n");
 }
 
 void init_server()
@@ -73,7 +58,6 @@ void init_server()
 		exit(1);
 	}
 	
-	printf("-----------start------------\n");
 	while(1)
 	{
 		socklen_t len = sizeof(client_addr);
