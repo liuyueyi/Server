@@ -16,6 +16,7 @@ case "$1" in
     ;;
 
 	restart)
+	echo "restart...."
 	kill -9 `cat kmd.pid`
 	if [ -x /home/pc/workspace/daemon/Server/kmd ] ; then
     echo "start..."
