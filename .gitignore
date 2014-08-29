@@ -1,4 +1,5 @@
 !.gitignore
 *~
-kmc_sa.pid
-kmsad
+*.o
+kmd.pid
+kmd

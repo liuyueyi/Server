@@ -1,10 +1,10 @@
-OBJS = kmsad.o server.o
+OBJS = kmd.o server.o
 CC = gcc
 CFLAGS = -Wall -O -g
-kmsad : $(OBJS)
+kmd : $(OBJS)
 	$(CC) $^ -o $@
 
 .PHONY: clean	
 clean:
-	-rm kmsad $(OBJS) *.*~
+	-rm kmd $(OBJS) *~
 
