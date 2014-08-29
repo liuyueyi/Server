@@ -12,6 +12,7 @@ case "$1" in
     stop)
     echo "kill... " `cat kmd.pid`
     kill -9 `cat kmd.pid`
+    rm kmd.pid
     ;;
 
 	restart)
