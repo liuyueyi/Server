@@ -89,9 +89,10 @@ int main()
 		scanf("%d", &choose);
 	}while(choose != 0 && choose != 1);
 	
-	char com[20]; 
+	char com[2]; 
 	sprintf(com, "%d", choose);
 	send(sockfd, com, strlen(com), 0);
+	
 		
 	switch(choose)
 	{

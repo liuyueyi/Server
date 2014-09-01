@@ -57,7 +57,7 @@ void send_volume_key(int sockfd)
 {
 	char buffer[LINE_MAX];
 	FILE *f;
-	if((f = fopen(temp_pathname, "r")) == NULL)
+	if((f = fopen("file.d", "r")) == NULL)
 	{
 		fprintf(stderr, "volume key pathname %s error\n", temp_pathname);
 		exit(1);
@@ -73,9 +73,9 @@ void send_volume_key(int sockfd)
 void server_process(int sockfd)
 {
 	int data_len = 0;
-	char buffer[200];
+	char buffer[1];
 	// receive and judge the client request
-	data_len = recv(sockfd, buffer, 200, 0); 
+	data_len = recv(sockfd, buffer, 1, 0); 
 	if(data_len < 0)
 	{
 		fprintf(stderr, "receive error\n");
