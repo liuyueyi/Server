@@ -23,7 +23,7 @@
 #define CONFIG_FILENAME "key.conf"
 #define SK_FILENAME "test.key"
 #define PK_FILENAME "test_pub.key"
-#define DEFAULT_PORT 10030
+#define DEFAULT_PORT 10033
 
 struct kmd_option
 {
