@@ -14,10 +14,28 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
-#include <strings.h>
+#include <string.h>
 #include <unistd.h>
+#include <time.h>
+#include <limits.h>
 
 
-void init_server();
+#define CONFIG_FILENAME "key.conf"
+#define SK_FILENAME "test.key"
+#define PK_FILENAME "test_pub.key"
+#define DEFAULT_PORT 10030
+
+struct kmd_option
+{
+	uint16_t port;
+	char ip[16];
+	
+	char sk_pathname[PATH_MAX];
+	char pk_pathname[PATH_MAX];
+	char config_pathname[PATH_MAX];
+};
+
+
+void init_server(const struct kmd_option *x);
 
 #endif /* SERVER_H_ */

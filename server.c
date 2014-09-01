@@ -8,10 +8,34 @@
 #include "server.h"
 
 #define temp_pathname "temp.d"
-void server_process(int sockfd)
+
+bool verify_client(int sockfd)
+{
+	char buffer[20];
+	int len = 0;
+	memset(buffer, 0, sizeof(buffer));
+	
+	srand((int)time(0));
+	int n = rand() % 1000;
+	sprintf(buffer, "%d", n);
+	
+	if(send(sockfd, buffer, strlen(buffer), 0) != strlen(buffer))
+		return false;
+	
+	if((len = recv(sockfd, buffer, 20, 0)) < 0)
+		return false;
+	int m = atoi(buffer);
+	if(m == n)
+		return true;
+	else
+		return false;
+}
+
+
+void receive_volume_key(int sockfd)
 {
 	char buffer[1024];
-	int data_len = 0;
+	int data_len;
 	FILE *f;
 	if((f = fopen(temp_pathname, "w")) == NULL)
 	{
@@ -28,15 +52,61 @@ void server_process(int sockfd)
 	fclose(f);
 }
 
-void init_server()
+
+void send_volume_key(int sockfd)
+{
+	char buffer[LINE_MAX];
+	FILE *f;
+	if((f = fopen(temp_pathname, "r")) == NULL)
+	{
+		fprintf(stderr, "volume key pathname %s error\n", temp_pathname);
+		exit(1);
+	}
+	
+	while(fgets(buffer, LINE_MAX, f))
+		send(sockfd, buffer, strlen(buffer), 0);
+		
+	fclose(f);	
+}
+
+
+void server_process(int sockfd)
+{
+	int data_len = 0;
+	char buffer[200];
+	// receive and judge the client request
+	data_len = recv(sockfd, buffer, 200, 0); 
+	if(data_len < 0)
+	{
+		fprintf(stderr, "receive error\n");
+		exit(1);
+	}
+	int command = atoi(buffer);
+	
+	switch(command)
+	{
+		case 0: // receive file
+			receive_volume_key(sockfd);
+			break;
+		case 1: // send file
+			send_volume_key(sockfd);
+			break;
+		default:
+			exit(1);
+	}
+}
+
+
+void init_server(const struct kmd_option *x)
 {
 	int sockfd;
 	int clientfd;
-	uint16_t port = 10033;
+	uint16_t port = x->port;
 	
 	struct sockaddr_in server_addr, client_addr;
 	bzero(&server_addr, sizeof(server_addr));
-	server_addr.sin_family = AF_INET;
+	if(strlen(x->ip) == 0)
+		server_addr.sin_family = AF_INET;
 	server_addr.sin_addr.s_addr  = htonl(INADDR_ANY);
 	server_addr.sin_port = htons(port);
 	

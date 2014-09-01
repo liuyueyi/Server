@@ -9,6 +9,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,6 +17,48 @@
 #include <limits.h>
 
 #define filename "file.d"
+#define temp_pathname "temp2.d"
+
+void cls_receive(int sockfd)
+{
+	char buffer[1024];
+	int data_len;
+	FILE *f;
+	if((f = fopen(temp_pathname, "w")) == NULL)
+	{
+		fprintf(stderr, "crete temp file %s error\n", temp_pathname);
+		exit(1);
+	}
+	
+	while((data_len = recv(sockfd, buffer, 1024, 0)) >0)
+	{
+		if(data_len < 1024)
+			buffer[data_len] = '\0';
+		printf("%s", buffer);
+		fprintf(f, "%s", buffer);
+	}
+	fclose(f);
+}
+
+
+void cls_send(int sockfd)
+{
+	FILE *f = NULL;
+	if((f = fopen(filename, "r")) == NULL)
+	{
+		fprintf(stderr, "%s file error\n", filename);
+		close(sockfd);
+		exit(1);
+	}
+	
+	char buf[LINE_MAX];
+	while(fgets(buf, LINE_MAX, f))
+	{
+		send(sockfd, buf, strlen(buf), 0);
+	}
+	fclose(f);
+}
+
 
 int main()
 {
@@ -38,22 +81,29 @@ int main()
 	{
 		fprintf(stderr, "connect eerror\n");
 		return -1;
-	}	
-	
-	FILE *f = NULL;
-	if((f = fopen(filename, "r")) == NULL)
-	{
-		fprintf(stderr, "%s file error\n", filename);
-		close(sockfd);
-		exit(1);
 	}
 	
-	char buf[LINE_MAX];
-	while(fgets(buf, LINE_MAX, f))
+	int choose = -1;
+	printf("receive 0, send 1\n");
+	do{
+		scanf("%d", &choose);
+	}while(choose != 0 && choose != 1);
+	
+	char com[20]; 
+	sprintf(com, "%d", choose);
+	send(sockfd, com, strlen(com), 0);
+		
+	switch(choose)
 	{
-		send(sockfd, buf, strlen(buf), 0);
+		case 0:
+			cls_send(sockfd);
+			break;
+		case 1:
+			cls_receive(sockfd);
+			break;
 	}
-	fclose(f);
+	
+	
 	printf("-----------send over------------\n");
 	close(sockfd);
 	return 0;
