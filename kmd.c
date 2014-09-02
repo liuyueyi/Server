@@ -13,10 +13,10 @@ struct option const long_options[] =
 { NULL, 0, NULL, 0 } };
 
 
-#define CONFIG_FILENAME "key.conf"
-#define TEMP_FILENAME "key.conf.tm"
-#define SK_FILENAME "test.key"
-#define PK_FILENAME "test_pub.key"
+#define CONFIG_FILENAME "rsa_key.conf"
+#define TEMP_FILENAME "rsa_key.conf.tm"
+#define SK_FILENAME "rsa_priv.key"
+#define PK_FILENAME "rsa_pub.key"
 #define DEFAULT_PORT 10033
 void kmd_option_init(struct kmd_option *x)
 {

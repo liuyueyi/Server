@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include <limits.h>
 
-#define filename "key.conf"
+#define filename "rsa_key.conf"
 #define temp_pathname "temp2.d"
 
 void cls_receive(int sockfd)
@@ -86,7 +86,7 @@ int main()
 	}
 	
 	int choose = -1;
-	printf("receive 0, send 1\n");
+	printf("send to server 0, receive from server 1\n");
 	do{
 		scanf("%d", &choose);
 	}while(choose != 0 && choose != 1);
