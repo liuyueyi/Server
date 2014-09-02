@@ -76,7 +76,6 @@ void server_process(int sockfd, const struct kmd_option *x)
 	char buffer[1];
 	// receive and judge the client request
 	data_len = recv(sockfd, buffer, 1, 0); 
-	printf("buffer = %s %d\n", buffer, data_len);
 	if(data_len < 0)
 	{
 		fprintf(stderr, "receive error\n");
