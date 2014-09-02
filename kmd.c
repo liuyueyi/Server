@@ -106,7 +106,7 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	if(daemon(1, 1) < 0)
+	if(daemon(1, 0) < 0)
 	{
 		fprintf(stderr, "start service, error\n");
 		exit(1);
