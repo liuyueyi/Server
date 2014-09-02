@@ -1,10 +1,12 @@
 .autotools
 .cproject
 .project
+*.tm
 !.gitignore
+.gitignore~
 *~
 *.o
 kmd.pid
-temp.d
+temp*
 kmd
 client
