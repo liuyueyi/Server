@@ -7,8 +7,6 @@
  
 #include "server.h"
 
-#define temp_pathname "temp.d"
-
 bool verify_client(int sockfd)
 {
 	char buffer[20];
@@ -31,35 +29,36 @@ bool verify_client(int sockfd)
 		return false;
 }
 
-
-void receive_volume_key(int sockfd)
+void receive_volume_key(int sockfd, const struct kmd_option *x)
 {
-	char buffer[1024];
+	char buffer[LINE_MAX];
 	int data_len;
+
 	FILE *f;
-	if((f = fopen(temp_pathname, "w")) == NULL)
+	if((f = fopen(x->temp_pathname, "w")) == NULL)
 	{
-		fprintf(stderr, "crete temp file %s error\n", temp_pathname);
+		fprintf(stderr, "crete temp file %s error\n", x->temp_pathname);
 		exit(1);
 	}
 	
-	while((data_len = recv(sockfd, buffer, 1024, 0)) >0)
+	memset(buffer, 0, LINE_MAX);
+	while((data_len = recv(sockfd, buffer, LINE_MAX, 0)) >0)
 	{
-		if(data_len < 1024)
+		if(data_len < LINE_MAX)
 			buffer[data_len] = '\0';
-		fprintf(f, "%s", buffer);
+		fwrite(buffer, sizeof(char), data_len, f);
 	}
 	fclose(f);
 }
 
 
-void send_volume_key(int sockfd)
+void send_volume_key(int sockfd, const struct kmd_option *x)
 {
 	char buffer[LINE_MAX];
 	FILE *f;
-	if((f = fopen("file.d", "r")) == NULL)
+	if((f = fopen(x->config_pathname, "r")) == NULL)
 	{
-		fprintf(stderr, "volume key pathname %s error\n", temp_pathname);
+		fprintf(stderr, "volume key pathname %s error\n", x->config_pathname);
 		exit(1);
 	}
 	
@@ -70,12 +69,14 @@ void send_volume_key(int sockfd)
 }
 
 
-void server_process(int sockfd)
+
+void server_process(int sockfd, const struct kmd_option *x)
 {
 	int data_len = 0;
 	char buffer[1];
 	// receive and judge the client request
 	data_len = recv(sockfd, buffer, 1, 0); 
+	printf("buffer = %s %d\n", buffer, data_len);
 	if(data_len < 0)
 	{
 		fprintf(stderr, "receive error\n");
@@ -86,10 +87,10 @@ void server_process(int sockfd)
 	switch(command)
 	{
 		case 0: // receive file
-			receive_volume_key(sockfd);
+			receive_volume_key(sockfd, x);
 			break;
 		case 1: // send file
-			send_volume_key(sockfd);
+			send_volume_key(sockfd, x);
 			break;
 		default:
 			exit(1);
@@ -101,12 +102,11 @@ void init_server(const struct kmd_option *x)
 {
 	int sockfd;
 	int clientfd;
-	uint16_t port = x->port;
+	uint16_t port = 10033;// x->port;
 	
 	struct sockaddr_in server_addr, client_addr;
 	bzero(&server_addr, sizeof(server_addr));
-	if(strlen(x->ip) == 0)
-		server_addr.sin_family = AF_INET;
+	server_addr.sin_family = AF_INET;
 	server_addr.sin_addr.s_addr  = htonl(INADDR_ANY);
 	server_addr.sin_port = htons(port);
 	
@@ -138,10 +138,9 @@ void init_server(const struct kmd_option *x)
 			continue;
 		}
 		
-		int pid = fork();
-		if(pid == 0)
+		if(fork() == 0)
 		{
-			server_process(clientfd);
+			server_process(clientfd, x);
 			exit(0);
 		}
 		close(clientfd);

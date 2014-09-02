@@ -12,6 +12,12 @@ struct option const long_options[] =
 { "help", no_argument, NULL, 'h' },
 { NULL, 0, NULL, 0 } };
 
+
+#define CONFIG_FILENAME "key.conf"
+#define TEMP_FILENAME "key.conf.tm"
+#define SK_FILENAME "test.key"
+#define PK_FILENAME "test_pub.key"
+#define DEFAULT_PORT 10033
 void kmd_option_init(struct kmd_option *x)
 {
 	x->port = DEFAULT_PORT;
@@ -19,6 +25,7 @@ void kmd_option_init(struct kmd_option *x)
 	strcpy(x->sk_pathname, SK_FILENAME);
 	strcpy(x->pk_pathname, PK_FILENAME);
 	strcpy(x->config_pathname, CONFIG_FILENAME);
+	strcpy(x->temp_pathname, TEMP_FILENAME);
 }
 
 
@@ -50,8 +57,12 @@ void decode_switch(int argc, char **argv, struct kmd_option *x)
 		case 'c':
 			if (*optarg == '=')
 				++optarg;
-			if (strlen(optarg) < PATH_MAX)
+			if (strlen(optarg) < PATH_MAX - 3)
+			{
 				strcpy(x->config_pathname, optarg);
+				strcpy(x->temp_pathname, optarg);
+				strcat(x->temp_pathname, ".tm");	
+			}
 			break;
 
 		case 'P':
@@ -95,7 +106,7 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	if(daemon(1, 0) < 0)
+	if(daemon(1, 1) < 0)
 	{
 		fprintf(stderr, "start service, error\n");
 		exit(1);

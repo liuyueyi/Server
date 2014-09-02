@@ -16,7 +16,7 @@
 #include <unistd.h>
 #include <limits.h>
 
-#define filename "file.d"
+#define filename "key.conf"
 #define temp_pathname "temp2.d"
 
 void cls_receive(int sockfd)
@@ -52,10 +52,12 @@ void cls_send(int sockfd)
 	}
 	
 	char buf[LINE_MAX];
+	int sum = 0;
 	while(fgets(buf, LINE_MAX, f))
-	{
-		send(sockfd, buf, strlen(buf), 0);
-	}
+		sum +=send(sockfd, buf, strlen(buf), 0);
+	
+	printf("send %d\n", sum);
+
 	fclose(f);
 }
 
@@ -93,7 +95,6 @@ int main()
 	sprintf(com, "%d", choose);
 	send(sockfd, com, strlen(com), 0);
 	
-		
 	switch(choose)
 	{
 		case 0:

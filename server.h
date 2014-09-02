@@ -33,9 +33,10 @@ struct kmd_option
 	char sk_pathname[PATH_MAX];
 	char pk_pathname[PATH_MAX];
 	char config_pathname[PATH_MAX];
+	char temp_pathname[PATH_MAX];
 };
 
 
-void init_server(const struct kmd_option *x);
+void init_server();
 
 #endif /* SERVER_H_ */
