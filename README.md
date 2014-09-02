@@ -42,13 +42,14 @@ kmd.c
 client.c
 --------
   This source code implements a simple tcp client, it can connect the remote tcp server, first to send requset to choose receive file from server or send file to server. Pay attention to the code blow. If server buffer size is bigger then 1, the receive file will smaller then expected.
-  client:
-    char com[2]; 
-	  sprintf(com, "%d", choose);
-	  send(sockfd, com, strlen(com), 0);
+  
+  	client:
+	char com[2]; 
+	sprintf(com, "%d", choose);
+	send(sockfd, com, strlen(com), 0);
 	
 	server:
-	  char buffer[1];
+	char buffer[1];
   	data_len = recv(sockfd, buffer, 1, 0); 
   	if(data_len < 0)
   	{
@@ -61,6 +62,7 @@ client.c
 init.sh
 -------
   Shell Script, used to control the server. Read "Test Command" to get more use
+  You should replace the path "/home/pc/workspace/daemon/Server/kmd" to yours
 
 Makefile
 --------
