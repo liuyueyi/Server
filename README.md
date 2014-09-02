@@ -30,15 +30,33 @@ Source Code Analysis
 server.c/server.h
 -----------------
   this source code implements a tcp server, it include create a socket and bind it to 10033 port(you can also choose another port), then listener the request from other computer throw the Intenert. When there is a valid request, then the main process will create a child process and  go into server_process() to respose the request.
-  In this project, the server only implements receive text file from other and save it in local disk. If receive all the content, then this child process will be killed!
+  In this project, the server not only implements receive text file from other and save it in local disk, but alos include send file to client. The two method was called by client's request. After respose the client request, this child process will be killed!
 
 kmd.c
 -----
-  This source code contain main function, it's used to create a background process and save the process pid into file kmd.pid
+  This source code contain main function, it's used to create a background process and save the process pid into file kmd.pid. In the code, I use getopt_long to decode the command input parameters. If you want to get more about this function, you can google how to use it. Here(http://my.oschina.net/u/566591/blog/307892) I had summaried the useage of daemon
+  This file also implements terminal interactive interface, you can get how to use this command by (./kmd -h or ./kmd --help).
+  You can choose the save file pathname by set config_pathname(./kmd -c xxx/tmp.conf or ./init.sh start -c xxx/tmp.conf), the receive file's pathname will append ".tm" to the original config pathname.
+  Use -p to set listen port, -i to set accepted ip, -P to set rsa verify public key pathname and -S to set rsa sign private key pathname.
   
 client.c
 --------
-  This source code implements a simple tcp client, it has only one function, just connect the server and send file to it.
+  This source code implements a simple tcp client, it can connect the remote tcp server, first to send requset to choose receive file from server or send file to server. Pay attention to the code blow. If server buffer size is bigger then 1, the receive file will smaller then expected.
+  client:
+    char com[2]; 
+	  sprintf(com, "%d", choose);
+	  send(sockfd, com, strlen(com), 0);
+	
+	server:
+	  char buffer[1];
+  	data_len = recv(sockfd, buffer, 1, 0); 
+  	if(data_len < 0)
+  	{
+  		fprintf(stderr, "receive error\n");
+  		exit(1);
+  	}
+  	int command = atoi(buffer);
+	
   
 init.sh
 -------
